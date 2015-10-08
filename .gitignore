@@ -44,3 +44,4 @@ Temporary Items
 
 # IDE specific files
 .settings
+.project
