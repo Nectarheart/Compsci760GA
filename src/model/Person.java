@@ -4,6 +4,7 @@ public class Person {
 	
 	public static final double EFFICACY = 0.1;
 	public static final int MAX_ILL_DAYS = 4;
+	public static final double[][] TRANSMISSION_PROB = {{1,2},{3,4}};
 	public static final double[] DEATH_PROB = {0.0000263, 0.000021, 0.0002942, 0.0002942, 0.01998};
 	public static final int SUSCEPTIBLE = 0;
 	public static final int INFECTED = 0;
@@ -15,6 +16,7 @@ public class Person {
 	private int age;
 	private int daysInfected = 0;
 	private boolean vaccinated;
+	private boolean firstTime = false;
 	
 	public Person(int pos, int status, int age, boolean vaccinated) {
 		this.pos = pos;
@@ -64,6 +66,14 @@ public class Person {
 			double rand = Math.random();
 			if (DEATH_PROB[age] >= rand) {
 				status = DEAD;
+			}
+		}
+	}
+	
+	public void updateTransimission(Person[] pop, double[][] transmissionMatrix, int[][] adjacencyMatrix) {
+		if (!firstTime && status == INFECTED) {
+			for (int i = 0; i < pop.length; i++) {
+				transmissionMatrix[pos][i] = 1;
 			}
 		}
 	}
