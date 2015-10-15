@@ -5,7 +5,7 @@ public class Person {
 	public static final double EFFICACY = 0.1;
 	public static final int MAX_ILL_DAYS = 4;
 	
-	public static final double[][] TRANSMISSION_PROB = {{0.04, 0, 0, 0, 0, 0}, {0, 0.015, 0, 0, 0, 0}, {0, 0, 0.0145, 0, 0, 0}, {0, 0, 0, 0.0125, 0, 0}, {0, 0, 0, 0, 0.0105, 0}, {1, 1, 1, 1, 1, 1}, {0.00004, 0.00004, 0.00012, 0.00012, 0.00012, 0.00016}, {0.00001, 0.00001, 0.0003, 0.0003, 0.0003, 0.0004}, {0, 0, 0, 0, 0, 0.04}};
+	//public static final double[][] TRANSMISSION_PROB = {{0.04, 0, 0, 0, 0, 0}, {0, 0.015, 0, 0, 0, 0}, {0, 0, 0.0145, 0, 0, 0}, {0, 0, 0, 0.0125, 0, 0}, {0, 0, 0, 0, 0.0105, 0}, {1, 1, 1, 1, 1, 1}, {0.00004, 0.00004, 0.00012, 0.00012, 0.00012, 0.00016}, {0.00001, 0.00001, 0.0003, 0.0003, 0.0003, 0.0004}, {0, 0, 0, 0, 0, 0.04}};
 	public static final double[] DEATH_PROB = {0.0000263, 0.000021, 0.0002942, 0.0002942, 0.01998};
 	public static final int SUSCEPTIBLE = 0;
 	public static final int INFECTED = 1;
@@ -20,16 +20,19 @@ public class Person {
 	private boolean vaccinated;
 	private boolean firstTime = false;
 	
-	public Person(int pos, int status, int age, MixingGroup[] groups, boolean vaccinated) {
+	public Person(int pos, int status, int age, boolean vaccinated) {
 		this.pos = pos;
 		this.status = status;
 		this.age = age;
-		this.groups = groups;
 		this.vaccinated = vaccinated;
 	}
 	
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	public void setGroups(MixingGroup[] groups) {
+		this.groups = groups;
 	}
 	
 	public int getPos() {
@@ -52,7 +55,7 @@ public class Person {
 		if (status == SUSCEPTIBLE) {
 			double prob = 1;
 			for (int i = 0; i < groups.length; i++) {
-				prob = prob*Math.pow(1-groups[i].getProb(), groups[i].getInfected());
+				prob = prob*Math.pow(1-groups[i].getProb(), groups[i].getInfected()-1);
 			}
 			double rand = Math.random();
 			if (vaccinated) {
@@ -70,6 +73,8 @@ public class Person {
 			double rand = Math.random();
 			if (DEATH_PROB[age] >= rand) {
 				status = DEAD;
+			} else {
+				status = RECOVERED;
 			}
 		}
 	}

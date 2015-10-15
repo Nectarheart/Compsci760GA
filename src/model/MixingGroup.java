@@ -4,10 +4,10 @@ import java.util.*;
 
 public class MixingGroup {
 	
-	private int type;
-	private double prob;
-	private int infected;
-	private ArrayList<Person> constituents;
+	protected int type;
+	protected double prob;
+	protected int infected;
+	protected ArrayList<Person> constituents;
 	
 	public MixingGroup(int type, double prob) {
 		this.type = type;
