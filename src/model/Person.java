@@ -4,24 +4,27 @@ public class Person {
 	
 	public static final double EFFICACY = 0.1;
 	public static final int MAX_ILL_DAYS = 4;
-	public static final double[][] TRANSMISSION_PROB = {{1,2},{3,4}};
+	
+	public static final double[][] TRANSMISSION_PROB = {{0.04, 0, 0, 0, 0, 0}, {0, 0.015, 0, 0, 0, 0}, {0, 0, 0.0145, 0, 0, 0}, {0, 0, 0, 0.0125, 0, 0}, {0, 0, 0, 0, 0.0105, 0}, {1, 1, 1, 1, 1, 1}, {0.00004, 0.00004, 0.00012, 0.00012, 0.00012, 0.00016}, {0.00001, 0.00001, 0.0003, 0.0003, 0.0003, 0.0004}, {0, 0, 0, 0, 0, 0.04}};
 	public static final double[] DEATH_PROB = {0.0000263, 0.000021, 0.0002942, 0.0002942, 0.01998};
 	public static final int SUSCEPTIBLE = 0;
-	public static final int INFECTED = 0;
-	public static final int RECOVERED = 0;
-	public static final int DEAD = 0;
+	public static final int INFECTED = 1;
+	public static final int RECOVERED = 2;
+	public static final int DEAD = 3;
 	
 	private int pos;
 	private int status;
 	private int age;
 	private int daysInfected = 0;
+	private MixingGroup[] groups;
 	private boolean vaccinated;
 	private boolean firstTime = false;
 	
-	public Person(int pos, int status, int age, boolean vaccinated) {
+	public Person(int pos, int status, int age, MixingGroup[] groups, boolean vaccinated) {
 		this.pos = pos;
 		this.status = status;
 		this.age = age;
+		this.groups = groups;
 		this.vaccinated = vaccinated;
 	}
 	
@@ -41,14 +44,15 @@ public class Person {
 		return age;
 	}
 	
-	public void infect(double[][] transmissionMatrix) {
+	public MixingGroup[] getGroups() {
+		return groups;
+	}
+	
+	public void update() {
 		if (status == SUSCEPTIBLE) {
 			double prob = 1;
-			for (int i = 0; i < transmissionMatrix.length; i++) {
-				double transmission = transmissionMatrix[pos][i];
-				if (transmission != 0) {
-					prob *= 1 - transmission;
-				}
+			for (int i = 0; i < groups.length; i++) {
+				prob = prob*Math.pow(1-groups[i].getProb(), groups[i].getInfected());
 			}
 			double rand = Math.random();
 			if (vaccinated) {
@@ -69,13 +73,4 @@ public class Person {
 			}
 		}
 	}
-	
-	public void updateTransimission(Person[] pop, double[][] transmissionMatrix, int[][] adjacencyMatrix) {
-		if (!firstTime && status == INFECTED) {
-			for (int i = 0; i < pop.length; i++) {
-				transmissionMatrix[pos][i] = 1;
-			}
-		}
-	}
-	
 }
