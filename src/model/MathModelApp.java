@@ -1,5 +1,7 @@
 package model;
 
+import java.util.*;
+
 public class MathModelApp {
 	
 	//Small playgroup
@@ -28,15 +30,30 @@ public class MathModelApp {
 	public static void main(String args[]) {
 		
 		Person[] pop = new Person[10000];
+		Community[] communities = new Community[5];
 		for(int i = 0; i < 5; i++) {
-			
+			Neighbourhood[] neighbourhoods = new Neighbourhood[4];
+			for(int j = 0; j < 4; j++) {
+				ArrayList<MixingGroup> playGroups = new ArrayList<MixingGroup>();
+				ArrayList<MixingGroup> daycares = new ArrayList<MixingGroup>();
+				ArrayList<MixingGroup> families = new ArrayList<MixingGroup>();
+				for(int k = 0; k < 20; k++) {
+					families.add(new MixingGroup(FAC, 0.2));
+					if (k<2) {
+						daycares.add(new MixingGroup(DC, 0.2));
+					}
+					if (k<4) {
+						playGroups.add(new MixingGroup(PG, 0.2));
+					}
+				}
+				neighbourhoods[j] = new Neighbourhood(NH, 0.2, playGroups, daycares, families);
+			}
+			MixingGroup[] elementarySchools = {new MixingGroup(ES, 0.2), new MixingGroup(ES, 0.2)};
+			communities[i] = new Community(COM, 0.2, new MixingGroup(HS,0.2), new MixingGroup(MS, 0.2), elementarySchools, neighbourhoods);
 		}
 		for(int i = 0; i < 10000; i++) {
-			pop[i] = new Person(i, Person.SUSCEPTIBLE, 0, false);
-		}
-		
-		for(int i = 0; i < 10000; i++) {
-			pop[i] = new Person(i, Person.SUSCEPTIBLE, 0, false);
+			int rand = (int)(5*Math.random() + 1);
+			pop[i] = new Person(i, Person.SUSCEPTIBLE, rand, false, new ArrayList<MixingGroup>(), communities[i % 5], communities[i % 5].getNeighbourhoods()[i % 4]);
 		}
 		
 		for(int i = 0; i < 10000; i++) {
