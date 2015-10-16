@@ -7,6 +7,7 @@ public class Neighbourhood extends MixingGroup {
 	private ArrayList<MixingGroup> playGroups;
 	private ArrayList<MixingGroup> daycares;
 	private ArrayList<MixingGroup> families;
+	private int numberOfPeople;
 	
 	public Neighbourhood(int type, double prob, ArrayList<MixingGroup> playGroups, ArrayList<MixingGroup> daycares, ArrayList<MixingGroup> families) {
 		super(type,prob);
@@ -25,6 +26,14 @@ public class Neighbourhood extends MixingGroup {
 	
 	public ArrayList<MixingGroup> getFamilies() {
 		return families;
+	}
+	
+	public void setNumber(int numberOfPeople) {
+		this.numberOfPeople = numberOfPeople;
+	}
+	
+	public int getNumber() {
+		return numberOfPeople;
 	}
 	
 }

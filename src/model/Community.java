@@ -7,7 +7,8 @@ public class Community extends MixingGroup {
 	private MixingGroup highschool;
 	private MixingGroup middleschool;
 	private MixingGroup[] elementaryschools;
-	private MixingGroup[] neighbourhoods;
+	private Neighbourhood[] neighbourhoods;
+	private int numberOfPeople;
 	
 	public Community(int type, double prob, MixingGroup highschool, MixingGroup middleschool, MixingGroup[] elementaryschools, Neighbourhood[] neighbourhoods) {
 		super(type,prob);
@@ -29,8 +30,16 @@ public class Community extends MixingGroup {
 		return elementaryschools;
 	}
 	
-	public MixingGroup[] getNeighbourhoods() {
+	public Neighbourhood[] getNeighbourhoods() {
 		return neighbourhoods;
+	}
+	
+	public void setNumber(int numberOfPeople) {
+		this.numberOfPeople = numberOfPeople;
+	}
+	
+	public int getNumber() {
+		return numberOfPeople;
 	}
 	
 }

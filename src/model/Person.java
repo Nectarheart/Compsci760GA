@@ -19,12 +19,12 @@ public class Person {
 	private int age;
 	private int daysInfected = 0;
 	private  ArrayList<MixingGroup> groups;
-	private MixingGroup community;
-	private MixingGroup neighbourhood;
+	private Community community;
+	private Neighbourhood neighbourhood;
 	private boolean vaccinated;
 	private boolean firstTime = false;
 	
-	public Person(int pos, int status, int age, boolean vaccinated, ArrayList<MixingGroup> groups, MixingGroup community, MixingGroup neighbourhood) {
+	public Person(int pos, int status, int age, boolean vaccinated, ArrayList<MixingGroup> groups, Community community, Neighbourhood neighbourhood) {
 		this.pos = pos;
 		this.status = status;
 		this.age = age;
@@ -62,7 +62,7 @@ public class Person {
 		return community;
 	}
 	
-	public MixingGroup getNeighbourhood() {
+	public Neighbourhood getNeighbourhood() {
 		return neighbourhood;
 	}
 	
