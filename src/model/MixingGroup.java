@@ -6,12 +6,16 @@ public class MixingGroup {
 	
 	protected int type;
 	protected double prob;
-	protected ArrayList<Person> constituents;
+	protected int numberOfInfectedChildren = 0;
+	protected int numberOfInfectedAdults = 0;
+	protected int numberOfChildren = 0;
+	protected int numberOfAdults = 0;
+	protected ArrayList<Person> members;
 	
 	public MixingGroup(int type, double prob) {
 		this.type = type;
 		this.prob = prob;
-		constituents = new ArrayList<Person>();
+		members = new ArrayList<Person>();
 	}
 	
 	public int getType() {
@@ -23,60 +27,66 @@ public class MixingGroup {
 	}
 
 	public void assignMember(Person member) {
-		constituents.add(member);
+		if (member.getAge() < 2) {
+			numberOfChildren++;
+			if (member.getStatus() == Constants.INFECTED) {
+				numberOfInfectedChildren++;
+			}
+		} else {
+			numberOfAdults++;
+			if (member.getStatus() == Constants.INFECTED) {
+				numberOfInfectedAdults++;
+			}
+		}
+		members.add(member);
+	}
+	
+	public void removeMember(Person member) {
+		if (member.getAge() < 2) {
+			numberOfChildren--;
+		} else {
+			numberOfAdults--;
+		}
+		members.remove(member);
+	}
+	
+	public void incrementInfected(Person member) {
+		if (member.getAge() < 2) {
+			numberOfInfectedChildren++;
+		} else {
+			numberOfInfectedAdults++;
+		}
+	}
+	
+	public void decrementInfected(Person member) {
+		if (member.getAge() < 2) {
+			numberOfInfectedChildren--;
+		} else {
+			numberOfInfectedAdults--;
+		}
 	}
 	
 	public ArrayList<Person> getMembers() {
-		return constituents;
+		return members;
 	}
 	
 	public int getInfected() {
-		int counter = 0;
-		for (int i = 0; i < constituents.size(); i++) {
-			if (constituents.get(i).getStatus() == Person.INFECTED) {
-				counter++;
-			}
-		}
-		return counter;
+		return numberOfInfectedChildren + numberOfInfectedAdults;
 	}
 	
 	public int getNumberOfChildren() {
-		int counter = 0;
-		for (int i = 0; i < constituents.size(); i++) {
-			if (constituents.get(i).getAge() < 2) {
-				counter++;
-			}
-		}
-		return counter;
+		return numberOfChildren;
 	}
 	
 	public int getNumberOfAdults() {
-		int counter = 0;
-		for (int i = 0; i < constituents.size(); i++) {
-			if (constituents.get(i).getAge() > 1) {
-				counter++;
-			}
-		}
-		return counter;
+		return numberOfAdults;
 	}
 	
 	public int getInfectedChildren() {
-		int counter = 0;
-		for (int i = 0; i < constituents.size(); i++) {
-			if (constituents.get(i).getAge() < 2 && constituents.get(i).getStatus() == Person.INFECTED) {
-				counter++;
-			}
-		}
-		return counter;
+		return numberOfInfectedChildren;
 	}
 	
 	public int getInfectedAdults() {
-		int counter = 0;
-		for (int i = 0; i < constituents.size(); i++) {
-			if (constituents.get(i).getAge() > 1 && constituents.get(i).getStatus() == Person.INFECTED) {
-				counter++;
-			}
-		}
-		return counter;
+		return numberOfInfectedAdults;
 	}
 }
