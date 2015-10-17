@@ -69,7 +69,7 @@ public class Person {
 		return neighbourhood;
 	}
 	
-	public void update() {
+	public int update() {
 		if (status == SUSCEPTIBLE) {
 			double prob = 1;
 			for (int i = 0; i < groups.size(); i++) {
@@ -101,29 +101,34 @@ public class Person {
 					prob = prob*Math.pow(1-groups.get(i).getProb(), groups.get(i).getInfected()-1);
 				}
 			}
-			System.out.println(prob);
 			double rand = Math.random();
 			if (vaccinated) {
 				if ((1-prob)*EFFICACY > rand) {
-					status = INFECTED;
+					return INFECTED;
 				}
 			} else {
 				if ((1-prob) > rand) {
-					status = INFECTED;
+					return INFECTED;
 				}
 			}
+			return SUSCEPTIBLE;
 		} else if (status == INFECTED && daysInfected < MAX_ILL_DAYS) {
 			daysInfected++;
+			return INFECTED;
 		} else {
 			double rand = Math.random();
 			if (DEATH_PROB[age] >= rand) {
-				status = DEAD;
-				for (int i = 0; i < groups.size(); i++) {
-					groups.get(i).getMembers().remove(this);
-				}
+				return DEAD;
 			} else {
-				status = RECOVERED;
+				return RECOVERED;
 			}
+		}
+	}
+	
+	public void kill() {
+		for (int i = 0; i < groups.size(); i++) {
+			groups.get(i).getMembers().remove(this);
+			groups.remove(i);
 		}
 	}
 }

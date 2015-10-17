@@ -76,10 +76,12 @@ public class MathModelApp {
 			}
 			if (i % 3 != 0) {
 				pop[i] = new Person(i, Person.SUSCEPTIBLE, age, false, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
+				
 			} else {
 				pop[i] = new Person(i, Person.INFECTED, age, false, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
 			}
 			pop[i].getNeighbourhood().getMembers().add(pop[i]);
+			pop[i].getCommunity().getMembers().add(pop[i]);
 			communities[randCommun].setNumber(communities[randCommun].getNumber() + 1);
 		}
 		
@@ -141,6 +143,34 @@ public class MathModelApp {
 							} else {
 								first.getGroups().add(hh);
 								hh.assignMember(first);
+								if (first.getAge() == 0) {
+									if ((int)(2*Math.random()) == 0) {
+										int playGroup = (int)(4*Math.random());
+										first.getGroups().add(communities[i].getNeighbourhoods()[j].getPlayGroups().get(playGroup));
+										communities[i].getNeighbourhoods()[j].getPlayGroups().get(playGroup).getMembers().add(first);
+									} else {
+										int dayCare = (int)(2*Math.random());
+										first.getGroups().add(communities[i].getNeighbourhoods()[j].getDaycares().get((int)(2*Math.random())));
+										communities[i].getNeighbourhoods()[j].getDaycares().get(dayCare).getMembers().add(first);
+									}
+								} else if (first.getAge() == 1) {
+									int school = (int)(3*Math.random());
+									if (school == 0) {
+										if ((int)(2*Math.random()) == 0) {
+											first.getGroups().add(communities[i].getElementaryschools()[0]);
+											communities[i].getElementaryschools()[0].getMembers().add(first);
+										} else {
+											first.getGroups().add(communities[i].getElementaryschools()[1]);
+											communities[i].getElementaryschools()[1].getMembers().add(first);
+										}
+									} else if (school == 1) {
+										first.getGroups().add(communities[i].getMiddleschool());
+										communities[i].getMiddleschool().getMembers().add(first);
+									} else {
+										first.getGroups().add(communities[i].getHighschool());
+										communities[i].getHighschool().getMembers().add(first);
+									}
+								}
 							}
 						}
 					} else {
@@ -150,21 +180,63 @@ public class MathModelApp {
 							if (communities[i].getNeighbourhoods()[j].getFamilies().get(randHH).getMembers().size() < 7) {
 								communities[i].getNeighbourhoods()[j].getFamilies().get(randHH).getMembers().add(first);
 								first.getGroups().add(communities[i].getNeighbourhoods()[j].getFamilies().get(randHH));
+								if (first.getAge() == 0) {
+									if ((int)(2*Math.random()) == 0) {
+										int playGroup = (int)(4*Math.random());
+										first.getGroups().add(communities[i].getNeighbourhoods()[j].getPlayGroups().get(playGroup));
+										communities[i].getNeighbourhoods()[j].getPlayGroups().get(playGroup).getMembers().add(first);
+									} else {
+										int dayCare = (int)(2*Math.random());
+										first.getGroups().add(communities[i].getNeighbourhoods()[j].getDaycares().get((int)(2*Math.random())));
+										communities[i].getNeighbourhoods()[j].getDaycares().get(dayCare).getMembers().add(first);
+									}
+								} else if (first.getAge() == 1) {
+									int school = (int)(3*Math.random());
+									if (school == 0) {
+										if ((int)(2*Math.random()) == 0) {
+											first.getGroups().add(communities[i].getElementaryschools()[0]);
+											communities[i].getElementaryschools()[0].getMembers().add(first);
+										} else {
+											first.getGroups().add(communities[i].getElementaryschools()[1]);
+											communities[i].getElementaryschools()[1].getMembers().add(first);
+										}
+									} else if (school == 1) {
+										first.getGroups().add(communities[i].getMiddleschool());
+										communities[i].getMiddleschool().getMembers().add(first);
+									} else {
+										first.getGroups().add(communities[i].getHighschool());
+										communities[i].getHighschool().getMembers().add(first);
+									}
+								}
 							}
 						}
 					}
 				}
 			}	
 		}
-		Person[] temp = new Person[pop.length];
-		System.arraycopy(pop, 0, temp, 0, pop.length );
-		for(int i = 0; i < pop.length; i++) {
-			System.out.println(i + " " + pop[i].getStatus());
-			temp[i].update();
-			int tempStat = temp[i].getStatus();
-			temp[i].setStatus(pop[i].getStatus());
-			pop[i].setStatus(tempStat);
-			System.out.println(i + " " + pop[i].getStatus());
+		int infectedCounter = 0;
+		int deadCounter = 0;
+		int recoveredCounter = 0;
+		int[] temp = new int[POP_SIZE];
+		for (int j = 0; j < 250; j++) {
+			for(int i = 0; i < pop.length; i++) {
+				temp[i] = pop[i].update();
+				if (temp[i] == Person.INFECTED && pop[i].getStatus() == Person.SUSCEPTIBLE) {
+					infectedCounter++;
+				} else if (temp[i] == Person.RECOVERED && pop[i].getStatus() == Person.INFECTED) {
+					recoveredCounter++;
+				}
+			}
+			for (int i = 0; i < pop.length; i++) {
+				if (temp[i] == Person.DEAD && pop[i].getStatus() == Person.INFECTED) {
+					pop[i].kill();
+					deadCounter++;
+				}
+				pop[i].setStatus(temp[i]);
+			}
 		}
+		System.out.println("Newly infected: " + infectedCounter);
+		System.out.println("Deceased: " + deadCounter);
+		System.out.println("Recovered: " + recoveredCounter);
 	}
 }
