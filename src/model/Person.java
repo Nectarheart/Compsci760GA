@@ -23,7 +23,7 @@ public class Person {
 		this.community = community;
 		this.neighbourhood = neighbourhood;
 		if (vaccinated) {
-			vaccineDay = 2;
+			vaccineDay = 1;
 		} else {
 			vaccineDay = 0;
 		}

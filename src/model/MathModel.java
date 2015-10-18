@@ -3,35 +3,24 @@ package model;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MathModel implements Runnable {
+public class MathModel {
 	
 	private Person[] pop; 
 	private Community[] communities;
 	private int[] vaccineStrategy;
+	private int infectedTotal = 0;
 	
 	public MathModel(int[] vaccineStrategy) {
 		this.vaccineStrategy = vaccineStrategy;
 		initialise();
 	}
 	
-	public void run() {
-		int infectedTotal = 0;
+	public int run() {
 		int infectedCounter = 0;
 		int deadCounter = 0;
 		int recoveredCounter = 0;
 		int[] temp = new int[Constants.POP_SIZE];
-		for (int i = 0; i < pop.length; i++) {
-			if (pop[i].getStatus() == Constants.INFECTED) {
-				infectedTotal++;
-			}
-		}
-		for (int j = 0; j < 100; j++) {
-			if (j % 1000 == 0) {
-				System.out.println("Total infected: " + infectedTotal);
-				System.out.println("Newly infected: " + infectedCounter);
-				System.out.println("Deceased: " + deadCounter);
-				System.out.println("Recovered: " + recoveredCounter);
-			}
+		for (int j = 0; j < 80; j++) {
 			for(int i = 0; i < pop.length; i++) {
 				temp[i] = pop[i].infect();
 				if (temp[i] == Constants.INFECTED && pop[i].getStatus() == Constants.SUSCEPTIBLE) {
@@ -48,16 +37,7 @@ public class MathModel implements Runnable {
 				pop[i].update(temp[i]);
 			}
 		}
-		System.out.println("Total infected: " + infectedTotal);
-		System.out.println("Newly infected: " + infectedCounter);
-		System.out.println("Deceased: " + deadCounter);
-		System.out.println("Recovered: " + recoveredCounter);
-		int i = 0;
-		shuffleArray(pop);
-		/*while(i < pop.length) {
-			System.out.println(pop[i]);
-			i++;
-		}*/
+		return infectedTotal;
 	}
 	
 	private void initialise() {
@@ -108,11 +88,12 @@ public class MathModel implements Runnable {
 			} else {
 				age = 4;
 			}
-			boolean toVacc = (int)(101*Math.random()) < vaccineStrategy[age];
+			boolean toVacc = (int)(101*Math.random()) <= vaccineStrategy[age];
 			if ((int)(2001*Math.random()) > 12) {
 				pop[i] = new Person(i, Constants.SUSCEPTIBLE, age, toVacc, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
 			} else {
-				pop[i] = new Person(i, Constants.INFECTED, age, false, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
+				pop[i] = new Person(i, Constants.INFECTED, age, toVacc, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
+				infectedTotal++;
 			}
 			pop[i].getNeighbourhood().assignMember(pop[i]);
 			pop[i].getCommunity().assignMember(pop[i]);
