@@ -7,8 +7,7 @@ public class Person {
 	private int pos;
 	private int status;
 	private int age;
-	private int daysInfected = 0;
-	private int incubationDays = 0;
+	private int daysInfected = -2;
 	private  ArrayList<MixingGroup> groups;
 	private Community community;
 	private Neighbourhood neighbourhood;
@@ -104,11 +103,7 @@ public class Person {
 			}
 			return Constants.SUSCEPTIBLE;
 		} else if (status == Constants.INFECTED && daysInfected < Constants.MAX_ILL_DAYS) {
-			if (incubationDays < Constants.MAX_INCU_DAYS) {
-				incubationDays++;
-			} else {
-				daysInfected++;
-			}
+			daysInfected++;
 			return Constants.INFECTED;
 		} else if (status == Constants.INFECTED && daysInfected == Constants.MAX_ILL_DAYS) {
 			double rand = Math.random();
@@ -126,7 +121,7 @@ public class Person {
 	
 	public void update(int status) {
 		this.status = status;
-		if (status == Constants.INFECTED && incubationDays == Constants.MAX_INCU_DAYS) {
+		if (status == Constants.INFECTED && daysInfected == 0) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).incrementInfected(this);
 			}

@@ -37,14 +37,14 @@ public class MixingGroup {
 	public void assignMember(Person member) {
 		if (member.getAge() < 2) {
 			numberOfChildren++;
-			if (member.getStatus() == Constants.INFECTED) {
+			/*if (member.getStatus() == Constants.INFECTED) {
 				numberOfInfectedChildren++;
-			}
+			}*/
 		} else {
 			numberOfAdults++;
-			if (member.getStatus() == Constants.INFECTED) {
+			/*if (member.getStatus() == Constants.INFECTED) {
 				numberOfInfectedAdults++;
-			}
+			}*/
 		}
 		members.add(member);
 	}

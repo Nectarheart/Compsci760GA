@@ -15,12 +15,19 @@ public class MathModel implements Runnable {
 	
 	public void run() {
 		Scanner scan = new Scanner(System.in);
+		int infectedTotal = 0;
 		int infectedCounter = 0;
 		int deadCounter = 0;
 		int recoveredCounter = 0;
 		int[] temp = new int[Constants.POP_SIZE];
-		for (int j = 0; j < 4000; j++) {
+		for (int i = 0; i < pop.length; i++) {
+			if (pop[i].getStatus() == Constants.INFECTED) {
+				infectedTotal++;
+			}
+		}
+		for (int j = 0; j < 250; j++) {
 			if (j % 2 == 0) {
+				System.out.println("Total infected: " + infectedTotal);
 				System.out.println("Newly infected: " + infectedCounter);
 				System.out.println("Deceased: " + deadCounter);
 				System.out.println("Recovered: " + recoveredCounter);
@@ -30,6 +37,7 @@ public class MathModel implements Runnable {
 				temp[i] = pop[i].infect();
 				if (temp[i] == Constants.INFECTED && pop[i].getStatus() == Constants.SUSCEPTIBLE) {
 					infectedCounter++;
+					infectedTotal++;
 				} else if (temp[i] == Constants.RECOVERED && pop[i].getStatus() == Constants.INFECTED) {
 					recoveredCounter++;
 				}
