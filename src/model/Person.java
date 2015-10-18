@@ -12,6 +12,7 @@ public class Person {
 	private Community community;
 	private Neighbourhood neighbourhood;
 	private boolean vaccinated;
+	private int vaccineDay;
 	
 	public Person(int pos, int status, int age, boolean vaccinated, ArrayList<MixingGroup> groups, Community community, Neighbourhood neighbourhood) {
 		this.pos = pos;
@@ -21,6 +22,11 @@ public class Person {
 		this.groups = groups;
 		this.community = community;
 		this.neighbourhood = neighbourhood;
+		if (vaccinated) {
+			vaccineDay = 2;
+		} else {
+			vaccineDay = 0;
+		}
 	}
 	
 	public void setStatus(int status) {
@@ -93,7 +99,7 @@ public class Person {
 			}
 			double rand = Math.random();
 			if (vaccinated) {
-				if ((1-prob)*Constants.EFFICACY > rand) {
+				if ((1-prob)*(1-Constants.EFFICACY) > rand) {
 					return Constants.INFECTED;
 				}
 			} else {
@@ -102,10 +108,10 @@ public class Person {
 				}
 			}
 			return Constants.SUSCEPTIBLE;
-		} else if (status == Constants.INFECTED && daysInfected < Constants.MAX_ILL_DAYS) {
+		} else if (status == Constants.INFECTED && daysInfected < (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			daysInfected++;
 			return Constants.INFECTED;
-		} else if (status == Constants.INFECTED && daysInfected == Constants.MAX_ILL_DAYS) {
+		} else if (status == Constants.INFECTED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			double rand = Math.random();
 			if (Constants.DEATH_PROB[age] >= rand) {
 				return Constants.DEAD;
@@ -125,12 +131,12 @@ public class Person {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).incrementInfected(this);
 			}
-		} else if (status == Constants.RECOVERED && daysInfected == Constants.MAX_ILL_DAYS) {
+		} else if (status == Constants.RECOVERED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).decrementInfected(this);
 			}
 			daysInfected++;
-		} else if (status == Constants.DEAD && daysInfected == Constants.MAX_ILL_DAYS) {
+		} else if (status == Constants.DEAD && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).decrementInfected(this);
 				groups.get(i).removeMember(this);

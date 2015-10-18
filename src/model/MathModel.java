@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MathModel implements Runnable {
 	
@@ -14,7 +15,6 @@ public class MathModel implements Runnable {
 	}
 	
 	public void run() {
-		Scanner scan = new Scanner(System.in);
 		int infectedTotal = 0;
 		int infectedCounter = 0;
 		int deadCounter = 0;
@@ -25,13 +25,12 @@ public class MathModel implements Runnable {
 				infectedTotal++;
 			}
 		}
-		for (int j = 0; j < 250; j++) {
-			if (j % 50 == 0) {
+		for (int j = 0; j < 100; j++) {
+			if (j % 1000 == 0) {
 				System.out.println("Total infected: " + infectedTotal);
 				System.out.println("Newly infected: " + infectedCounter);
 				System.out.println("Deceased: " + deadCounter);
 				System.out.println("Recovered: " + recoveredCounter);
-				scan.nextLine();
 			}
 			for(int i = 0; i < pop.length; i++) {
 				temp[i] = pop[i].infect();
@@ -49,26 +48,23 @@ public class MathModel implements Runnable {
 				pop[i].update(temp[i]);
 			}
 		}
+		System.out.println("Total infected: " + infectedTotal);
 		System.out.println("Newly infected: " + infectedCounter);
 		System.out.println("Deceased: " + deadCounter);
 		System.out.println("Recovered: " + recoveredCounter);
 		int i = 0;
-		int counter = 0;
-		System.out.println(pop[(int)(10000*Math.random())]);
-		while(i < pop.length) {
-			if (pop[i].getAge() == 0) {
-				System.out.println(pop[i]);
-				counter++;
-			}
+		shuffleArray(pop);
+		/*while(i < pop.length) {
+			System.out.println(pop[i]);
 			i++;
-		}
-		//System.out.println(counter);
+		}*/
 	}
 	
 	private void initialise() {
 		
 		pop = new Person[Constants.POP_SIZE];
 		communities = new Community[5];
+		MixingGroup currentWP = new MixingGroup(Constants.WRKGRP, Constants.ADULT_TO_ADULT);
 
 		for(int i = 0; i < 5; i++) {
 			Neighbourhood[] neighbourhoods = new Neighbourhood[4];
@@ -120,6 +116,20 @@ public class MathModel implements Runnable {
 			}
 			pop[i].getNeighbourhood().assignMember(pop[i]);
 			pop[i].getCommunity().assignMember(pop[i]);
+		}
+		
+		shuffleArray(pop);
+		for (int i = 0; i < pop.length; i++) {
+			if (pop[i].getAge() > 1) {
+				if (currentWP.getMembers().size() < 25) {
+					pop[i].getGroups().add(currentWP);
+					currentWP.assignMember(pop[i]);
+				} else {
+					currentWP = new MixingGroup(Constants.WRKGRP, Constants.ADULT_TO_ADULT);
+					pop[i].getGroups().add(currentWP);
+					currentWP.assignMember(pop[i]);
+				}
+			}
 		}
 		
 		for(int i = 0; i < 5; i++) {
@@ -191,8 +201,8 @@ public class MathModel implements Runnable {
 										candidateDC.assignMember(first);
 									}
 								} else if (first.getAge() == 1) {
-									int school = (int)(3*Math.random());
-									if (school == 0) {
+									int school = (int)(101*Math.random());
+									if (0 <= school && school <= 36) {
 										if ((int)(2*Math.random()) == 0) {
 											first.getGroups().add(communities[i].getElementaryschools()[0]);
 											communities[i].getElementaryschools()[0].assignMember(first);
@@ -200,7 +210,7 @@ public class MathModel implements Runnable {
 											first.getGroups().add(communities[i].getElementaryschools()[1]);
 											communities[i].getElementaryschools()[1].assignMember(first);
 										}
-									} else if (school == 1) {
+									} else if (36 < school && school <= 65) {
 										first.getGroups().add(communities[i].getMiddleschool());
 										communities[i].getMiddleschool().assignMember(first);
 									} else {
@@ -228,8 +238,8 @@ public class MathModel implements Runnable {
 										candidateDC.assignMember(first);
 									}
 								} else if (first.getAge() == 1) {
-									int school = (int)(3*Math.random());
-									if (school == 0) {
+									int school = (int)(101*Math.random());
+									if (0 <= school && school <= 36) {
 										if ((int)(2*Math.random()) == 0) {
 											first.getGroups().add(communities[i].getElementaryschools()[0]);
 											communities[i].getElementaryschools()[0].assignMember(first);
@@ -237,7 +247,7 @@ public class MathModel implements Runnable {
 											first.getGroups().add(communities[i].getElementaryschools()[1]);
 											communities[i].getElementaryschools()[1].assignMember(first);
 										}
-									} else if (school == 1) {
+									} else if (36 < school && school <= 65) {
 										first.getGroups().add(communities[i].getMiddleschool());
 										communities[i].getMiddleschool().assignMember(first);
 									} else {
@@ -251,6 +261,17 @@ public class MathModel implements Runnable {
 				}
 			}	
 		}
+	}
+	
+	private void shuffleArray(Person[] ar) {
+	    Random rnd = ThreadLocalRandom.current();
+	    for (int i = ar.length - 1; i > 0; i--) {
+	    	int index = rnd.nextInt(i + 1);
+	    	// Simple swap
+	    	Person a = ar[index];
+	    	ar[index] = ar[i];
+	    	ar[i] = a;
+	    }
 	}
 	
 }
