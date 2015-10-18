@@ -8,6 +8,7 @@ public class Person {
 	private int status;
 	private int age;
 	private int daysInfected = 0;
+	private int incubationDays = 0;
 	private  ArrayList<MixingGroup> groups;
 	private Community community;
 	private Neighbourhood neighbourhood;
@@ -55,20 +56,20 @@ public class Person {
 		return neighbourhood;
 	}
 	
-	public int update() {
+	public int infect() {
 		if (status == Constants.SUSCEPTIBLE) {
 			double prob = 1;
 			int otherInfected = 0;
 			double transmissionProb = 0.0;
 			for (int i = 0; i < groups.size(); i++) {
-				otherInfected = groups.get(i).getInfected()-1;
+				otherInfected = groups.get(i).getInfected();
 				transmissionProb = groups.get(i).getProb();
 				if (groups.get(i).getType() == Constants.FAM) {
 					if (age < 2) {
 						prob = prob*Math.pow(1-Constants.ADULT_TO_CHILD, groups.get(i).getInfectedAdults());
-						prob = prob*Math.pow(1-Constants.CHILD_TO_CHILD, groups.get(i).getInfectedChildren()-1);
+						prob = prob*Math.pow(1-Constants.CHILD_TO_CHILD, groups.get(i).getInfectedChildren());
 					} else {
-						prob = prob*Math.pow(1-Constants.ADULT_TO_ADULT, groups.get(i).getInfectedAdults()-1);
+						prob = prob*Math.pow(1-Constants.ADULT_TO_ADULT, groups.get(i).getInfectedAdults());
 						prob = prob*Math.pow(1-Constants.ADULT_TO_CHILD, groups.get(i).getInfectedChildren());
 					}
 				} else if (groups.get(i).getType() == Constants.COM) {
@@ -94,41 +95,60 @@ public class Person {
 			double rand = Math.random();
 			if (vaccinated) {
 				if ((1-prob)*Constants.EFFICACY > rand) {
-					for (int i = 0; i < groups.size(); i++) {
-						groups.get(i).incrementInfected(this);
-					}
 					return Constants.INFECTED;
 				}
 			} else {
 				if ((1-prob) > rand) {
-					for (int i = 0; i < groups.size(); i++) {
-						groups.get(i).incrementInfected(this);
-					}
 					return Constants.INFECTED;
 				}
 			}
 			return Constants.SUSCEPTIBLE;
 		} else if (status == Constants.INFECTED && daysInfected < Constants.MAX_ILL_DAYS) {
-			daysInfected++;
+			if (incubationDays < Constants.MAX_INCU_DAYS) {
+				incubationDays++;
+			} else {
+				daysInfected++;
+			}
 			return Constants.INFECTED;
-		} else {
+		} else if (status == Constants.INFECTED && daysInfected == Constants.MAX_ILL_DAYS) {
 			double rand = Math.random();
 			if (Constants.DEATH_PROB[age] >= rand) {
 				return Constants.DEAD;
 			} else {
-				for (int i = 0; i < groups.size(); i++) {
-					groups.get(i).decrementInfected(this);
-				}
 				return Constants.RECOVERED;
 			}
+		} else if (status == Constants.DEAD){
+			return Constants.DEAD;
+		} else {
+			return Constants.RECOVERED;
 		}
 	}
 	
-	public void kill() {
-		for (int i = 0; i < groups.size(); i++) {
-			groups.get(i).decrementInfected(this);
-			groups.get(i).removeMember(this);
-			groups.remove(i);
+	public void update(int status) {
+		this.status = status;
+		if (status == Constants.INFECTED && incubationDays == Constants.MAX_INCU_DAYS) {
+			for (int i = 0; i < groups.size(); i++) {
+				groups.get(i).incrementInfected(this);
+			}
+		} else if (status == Constants.RECOVERED && daysInfected == Constants.MAX_ILL_DAYS) {
+			for (int i = 0; i < groups.size(); i++) {
+				groups.get(i).decrementInfected(this);
+			}
+			daysInfected++;
+		} else if (status == Constants.DEAD && daysInfected == Constants.MAX_ILL_DAYS) {
+			for (int i = 0; i < groups.size(); i++) {
+				groups.get(i).decrementInfected(this);
+				groups.get(i).removeMember(this);
+			}
+			daysInfected++;
 		}
+	}
+	
+	public String toString() {
+		String toSend = "";
+		for(int i = 0; i < groups.size(); i++) {
+			toSend += (groups.get(i).toString()) + "\n";
+		}
+		return "Age: " + age + " Status: " + status + " " + toSend;
 	}
 }

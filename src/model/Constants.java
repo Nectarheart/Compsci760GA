@@ -23,9 +23,14 @@ public class Constants {
 	
 	public static final int POP_SIZE = 10000;
 	
-	public static final double EFFICACY = 0.1;
-	public static final int MAX_ILL_DAYS = 4;
+	public static final int NUMBER_OF_PG = 4;
 	
+	public static final double EFFICACY = 0.8;
+	public static final int MAX_ILL_DAYS = 6;
+	public static final int MAX_INCU_DAYS = 2;
+	
+	//public static final double[] DEATH_PROB = {1, 1, 1, 1, 1};
+	//public static final double[] DEATH_PROB = {0, 0, 0, 0, 0};
 	public static final double[] DEATH_PROB = {0.0000263, 0.000021, 0.0002942, 0.0002942, 0.01998};
 	public static final int SUSCEPTIBLE = 0;
 	public static final int INFECTED = 1;
