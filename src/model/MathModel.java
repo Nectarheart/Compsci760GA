@@ -26,7 +26,7 @@ public class MathModel implements Runnable {
 			}
 		}
 		for (int j = 0; j < 250; j++) {
-			if (j % 2 == 0) {
+			if (j % 50 == 0) {
 				System.out.println("Total infected: " + infectedTotal);
 				System.out.println("Newly infected: " + infectedCounter);
 				System.out.println("Deceased: " + deadCounter);
@@ -56,8 +56,8 @@ public class MathModel implements Runnable {
 		int counter = 0;
 		System.out.println(pop[(int)(10000*Math.random())]);
 		while(i < pop.length) {
-			if (pop[i].getStatus() == Constants.RECOVERED) {
-				//System.out.println(pop[i]);
+			if (pop[i].getAge() == 0) {
+				System.out.println(pop[i]);
 				counter++;
 			}
 			i++;
@@ -155,9 +155,6 @@ public class MathModel implements Runnable {
 						continue;
 					}
 					Person first = null;
-					int pgNum = 0;
-					MixingGroup daycare = new MixingGroup(Constants.DC, 0.08);
-					boolean daycareFull = false;
 					if (kidCounter != temp.size()) {
 						first = temp.remove(0);
 						while (first.getAge() < 2) {						
@@ -184,25 +181,14 @@ public class MathModel implements Runnable {
 								first.getGroups().add(hh);
 								hh.assignMember(first);
 								if (first.getAge() == 0) {
-									if (pgNum < Constants.NUMBER_OF_PG) {
-										int sizeLeft = communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).getSizeLeft();
-										if (sizeLeft == 0) {
-											pgNum++;
-										}
-										if (pgNum < Constants.NUMBER_OF_PG) {
-											first.getGroups().add(communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum));
-											communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).assignMember(first);
-											communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).setSizeLeft(sizeLeft--);
-										}
+									MixingGroup candidatePG = communities[i].getNeighbourhoods()[j].getEmptyPG();
+									if (candidatePG != null) {
+										first.getGroups().add(candidatePG);
+										candidatePG.assignMember(first);
 									} else {
-										if (daycareFull) {
-											daycare = new MixingGroup(Constants.DC, 0.08);
-											daycareFull = false;
-										}
-										communities[i].getNeighbourhoods()[j].getDaycares().add(daycare);
-										first.getGroups().add(daycare);
-										daycare.assignMember(first);
-										daycare.setSizeLeft(daycare.getSizeLeft() - 1);
+										MixingGroup candidateDC = communities[i].getNeighbourhoods()[j].getEmptyDC();
+										first.getGroups().add(candidateDC);
+										candidateDC.assignMember(first);
 									}
 								} else if (first.getAge() == 1) {
 									int school = (int)(3*Math.random());
@@ -232,25 +218,14 @@ public class MathModel implements Runnable {
 								communities[i].getNeighbourhoods()[j].getFamilies().get(randHH).assignMember(first);
 								first.getGroups().add(communities[i].getNeighbourhoods()[j].getFamilies().get(randHH));
 								if (first.getAge() == 0) {
-									if (pgNum < Constants.NUMBER_OF_PG) {
-										int sizeLeft = communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).getSizeLeft();
-										if (sizeLeft == 0) {
-											pgNum++;
-										}
-										if (pgNum < Constants.NUMBER_OF_PG) {
-											first.getGroups().add(communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum));
-											communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).assignMember(first);
-											communities[i].getNeighbourhoods()[j].getPlayGroups().get(pgNum).setSizeLeft(sizeLeft--);
-										}
+									MixingGroup candidatePG = communities[i].getNeighbourhoods()[j].getEmptyPG();
+									if (candidatePG != null) {
+										first.getGroups().add(candidatePG);
+										candidatePG.assignMember(first);
 									} else {
-										if (daycareFull) {
-											daycare = new MixingGroup(Constants.DC, 0.08);
-											daycareFull = false;
-										}
-										communities[i].getNeighbourhoods()[j].getDaycares().add(daycare);
-										first.getGroups().add(daycare);
-										daycare.assignMember(first);
-										daycare.setSizeLeft(daycare.getSizeLeft() - 1);
+										MixingGroup candidateDC = communities[i].getNeighbourhoods()[j].getEmptyDC();
+										first.getGroups().add(candidateDC);
+										candidateDC.assignMember(first);
 									}
 								} else if (first.getAge() == 1) {
 									int school = (int)(3*Math.random());

@@ -10,20 +10,12 @@ public class MixingGroup {
 	protected int numberOfInfectedAdults = 0;
 	protected int numberOfChildren = 0;
 	protected int numberOfAdults = 0;
-	protected int sizeLeft = 0;
 	protected ArrayList<Person> members;
 	
 	public MixingGroup(int type, double prob) {
 		this.type = type;
 		this.prob = prob;
 		members = new ArrayList<Person>();
-		if (type == Constants.PG) {
-			sizeLeft = 5;
-		} else if (type == Constants.DC) {
-			sizeLeft = 14;
-		} else if (type == Constants.WRKGRP) {
-			sizeLeft = 25;
-		}
 	}
 	
 	public int getType() {
@@ -96,14 +88,6 @@ public class MixingGroup {
 	
 	public int getInfectedAdults() {
 		return numberOfInfectedAdults;
-	}
-	
-	public void setSizeLeft(int size) {
-		sizeLeft = size;
-	}
-	
-	public int getSizeLeft() {
-		return sizeLeft;
 	}
 	
 	public String toString() {

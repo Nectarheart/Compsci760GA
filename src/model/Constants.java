@@ -25,7 +25,7 @@ public class Constants {
 	
 	public static final int NUMBER_OF_PG = 4;
 	
-	public static final double EFFICACY = 0.8;
+	public static final double EFFICACY = 0.1;
 	public static final int MAX_ILL_DAYS = 4;
 	
 	//public static final double[] DEATH_PROB = {1, 1, 1, 1, 1};

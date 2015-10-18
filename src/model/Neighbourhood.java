@@ -26,4 +26,25 @@ public class Neighbourhood extends MixingGroup {
 	public ArrayList<MixingGroup> getFamilies() {
 		return families;
 	}
+	
+	public MixingGroup getEmptyPG() {
+		for (int i = 0; i < playGroups.size(); i++) {
+			if (playGroups.get(i).getNumberOfChildren() < 5) {
+				return playGroups.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public MixingGroup getEmptyDC() {
+		if (daycares.size() == 0) {
+			daycares.add(new MixingGroup(Constants.DC, 0.08));
+			return daycares.get(daycares.size()-1);
+		}
+		if (daycares.get(daycares.size()-1).getNumberOfChildren() < 14) {
+			return daycares.get(daycares.size()-1);
+		}
+		daycares.add(new MixingGroup(Constants.DC, 0.08));
+		return daycares.get(daycares.size()-1);
+	}
 }
