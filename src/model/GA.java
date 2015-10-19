@@ -1,40 +1,108 @@
 package model;
 
+import java.util.*;
+
 public class GA {
 	
-	private int[][] values = new int[Constants.GA_POP_SIZE][5];
+	private double[][] values = new double[Constants.GA_POP_SIZE][5];
+	private double[][] nextGen = new double[Constants.GA_POP_SIZE][5];
+	private int[] outcomes;
 	
 	public GA(int total) {
 		int place = 0;
 		for(int i = 0; i < values.length; i++) {
 			for(int j = 0; j < 5; j++) {
-				values[i][j] = (int)((total+1)*Math.random());
+				values[i][j] = Math.random();
 			}
 			while (sum(values[i]) > total) {
 				place = (int)(5*Math.random());
-				if (values[i][place] > 30) {
-					values[i][place] -= 30;
-				} else if (100*Math.random() < 1) {
+				if (values[i][place] > 0.01) {
+					values[i][place] -= 0.01;
+				} else if (2*Math.random() < 1) {
 					values[i][place] = 0;	
+				}
+			}
+			while (sum(values[i]) < total - 5) {
+				place = (int)(5*Math.random());
+				if (values[i][place] < 0.98) {
+					values[i][place] += 0.01;
+				} else if (100*Math.random() < 1) {
+					values[i][place] = 1.0;	
 				}
 			}
 			/*for(int j = 0; j < 5; j++) {
 				System.out.print(values[i][j] + " ");
 			}
-			System.out.println();*/
+			System.out.println(sum(values[i]));*/
 		}
 	}
 	
-	public int sum(int[] toSum) {
+	public int sum(double[] toSum) {
 		int sum = 0;
 		for(int i = 0; i < toSum.length; i++) {
-			sum += toSum[i];
+			sum += toSum[i]*Constants.AGE_GROUP_SIZE[i];
 		}
 		return sum;
 	}
 	
-	public int[] getValues(int pos) {
+	public double[] getValues(int pos) {
 		return values[pos];
+	}
+	
+	public void setOutcomes(int[] outcomes) {
+		this.outcomes = outcomes;
+	}
+	
+	public double[] tournament(ArrayList<Integer> alreadyChosen) {
+		double[][] current = new double[10][5];
+		int[] currentOutcomes = new int[10];
+		int rand;
+		for (int i = 0; i < 10; i++) {
+			rand = (int)(Constants.GA_POP_SIZE*Math.random());
+			if (alreadyChosen.contains(rand)) {
+				i--;
+				continue;
+			}
+			current[i] = values[rand];
+			currentOutcomes[i] = outcomes[rand];
+		}
+		int temp = currentOutcomes[0];
+		int pos = 0;
+		for (int i = 1; i < 10; i++) {
+			if (currentOutcomes[i] < temp) {
+				temp = currentOutcomes[i];
+				pos = i;
+			}
+		}
+		return current[pos];
+	}
+	
+	public double[] crossover(double[] first, double[] second) {
+		double[] result =  new double[5];
+		for (int i = 0; i < 5; i++) {
+			result[i] = Constants.CROSSOVER*first[i] + (1-Constants.CROSSOVER)*second[i];
+		}
+		return result;
+	}
+	
+	public void mutation(double toMute) {
+		
+	}
+	
+	public void getNextGeneration() {
+		nextGen = new double[Constants.GA_POP_SIZE][5];
+		ArrayList<Integer> alreadyChosen = new ArrayList<Integer>();
+		int top = GA.findMin(outcomes)[0];
+		nextGen[0] = values[top];
+		alreadyChosen.add(top);
+		double[][] temp = new double[25][5];
+		for (int i = 0; i < 25; i++) {
+			temp[i] = tournament(alreadyChosen);
+		}
+		for (int i = 0; i < Constants.GA_POP_SIZE - 1; i++) {
+			nextGen[i+1] = crossover(temp[(int)(25*Math.random())], temp[(int)(25*Math.random())]);
+		}
+		values = nextGen;
 	}
 	
 	public static int[] findMin(int[] list) {
@@ -47,6 +115,5 @@ public class GA {
 		}
 		return currentMin;
 	}
-	
 	
 }

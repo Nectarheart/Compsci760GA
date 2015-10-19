@@ -38,13 +38,15 @@ public class Neighbourhood extends MixingGroup {
 	
 	public MixingGroup getEmptyDC() {
 		if (daycares.size() == 0) {
-			daycares.add(new MixingGroup(Constants.DC, 0.08));
+			//Messing around
+			daycares.add(new MixingGroup(Constants.DC, Constants.DC_PROB));
 			return daycares.get(daycares.size()-1);
 		}
 		if (daycares.get(daycares.size()-1).getNumberOfChildren() < 14) {
 			return daycares.get(daycares.size()-1);
 		}
-		daycares.add(new MixingGroup(Constants.DC, 0.08));
+		//Messing around
+		daycares.add(new MixingGroup(Constants.DC, Constants.DC_PROB));
 		return daycares.get(daycares.size()-1);
 	}
 }

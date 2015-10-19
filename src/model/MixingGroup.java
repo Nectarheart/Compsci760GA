@@ -84,6 +84,11 @@ public class MixingGroup {
 		return numberOfInfectedAdults;
 	}
 	
+	public void reset() {
+		numberOfInfectedAdults = 0;
+		numberOfInfectedChildren = 0;
+	}
+	
 	public String toString() {
 		return "Type: " + type + " Number of members: " + members.size() + " Number of adults: " + numberOfAdults + " Number of children: " + numberOfChildren + " Number of infected: " + (numberOfInfectedChildren + numberOfInfectedAdults) + " Number of infected children: " + numberOfInfectedChildren + " Number of infected adults: " + numberOfInfectedAdults;
 	}

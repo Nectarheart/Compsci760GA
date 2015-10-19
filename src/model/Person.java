@@ -61,6 +61,21 @@ public class Person {
 		return neighbourhood;
 	}
 	
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public void setVaccine(boolean vaccinated) {
+		this.vaccinated = vaccinated;
+	}
+	
+	public void reset() {
+		daysInfected = -2;
+		for (int i = 0; i < groups.size(); i++) {
+			groups.get(i).reset();
+		}
+	}
+	
 	public int infect() {
 		if (status == Constants.SUSCEPTIBLE) {
 			double prob = 1;
@@ -113,7 +128,7 @@ public class Person {
 			return Constants.INFECTED;
 		} else if (status == Constants.INFECTED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			double rand = Math.random();
-			if (Constants.DEATH_PROB[age] >= rand) {
+			if (Constants.DEATH_PROB[age]*5 >= rand) {
 				return Constants.DEAD;
 			} else {
 				return Constants.RECOVERED;
@@ -139,7 +154,7 @@ public class Person {
 		} else if (status == Constants.DEAD && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).decrementInfected(this);
-				groups.get(i).removeMember(this);
+				//groups.get(i).removeMember(this);
 			}
 			daysInfected++;
 		}
