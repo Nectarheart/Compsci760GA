@@ -5,7 +5,7 @@ public class MathModelApp {
 	public static void main(String args[]) {
 		int[] total;
 		int[] totalInfectedArray = new int[Constants.GA_POP_SIZE];
-		GA ga = new GA(4000);
+		GA ga = new GA(3000);
 		MathModel model = new MathModel();
 		for (int k=0; k < 10; k++) {	
 			for(int j = 0; j < Constants.GA_POP_SIZE; j++) {

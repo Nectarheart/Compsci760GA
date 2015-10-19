@@ -23,12 +23,13 @@ public class MathModel {
 		int deadCounter = 0;
 		int recoveredCounter = 0;
 		int[] temp = new int[Constants.POP_SIZE];
-		for (int j = 0; j < 80; j++) {
+		for (int j = 0; j < 140; j++) {
 			for(int i = 0; i < pop.length; i++) {
 				temp[i] = pop[i].infect();
 				if (temp[i] == Constants.INFECTED && pop[i].getStatus() == Constants.SUSCEPTIBLE) {
 					infectedCounter++;
 					infectedTotal[pop[i].getAge()]++;
+					
 				} else if (temp[i] == Constants.RECOVERED && pop[i].getStatus() == Constants.INFECTED) {
 					recoveredCounter++;
 				}
@@ -182,9 +183,8 @@ public class MathModel {
 							}
 							MixingGroup hh = new MixingGroup(Constants.FAM, Constants.FAM_PROB);
 							communities[i].getNeighbourhoods()[j].getFamilies().add(hh);
-							first.getGroups().add(hh);
-							
 							if (first.getAge() < 4 || 10*Math.random() < 1) {
+								first.getGroups().add(hh);
 								hh.assignMember(first);
 								int adultNumber = 1;
 								for (int k = 0; k < hhSize - 1 && temp.size() > 0; k++) {
