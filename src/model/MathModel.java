@@ -88,7 +88,7 @@ public class MathModel {
 			} else {
 				age = 4;
 			}
-			boolean toVacc = (int)(101*Math.random()) <= vaccineStrategy[age];
+			boolean toVacc = (int)(10001*Math.random()) <= vaccineStrategy[age];
 			if ((int)(2001*Math.random()) > 12) {
 				pop[i] = new Person(i, Constants.SUSCEPTIBLE, age, toVacc, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
 			} else {

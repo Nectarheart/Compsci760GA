@@ -23,6 +23,8 @@ public class Constants {
 	
 	public static final int POP_SIZE = 10000;
 	
+	public static final int GA_POP_SIZE = 50;
+	
 	public static final int NUMBER_OF_PG = 4;
 	
 	public static final int WORKPLACE_SIZE = 25;
