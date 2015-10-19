@@ -10,12 +10,17 @@ public class GA {
 	
 	public GA(int total) {
 		int place = 0;
-		/*values[0][0] = 1.0;
-		values[0][1] = 1.0;
+		/*values[0][0] = 0.0;
+		values[0][1] = 0.0;
 		values[0][2] = 1.0;
-		values[0][3] = 1.0;
-		values[0][4] = 1.0;*/
-		for(int i = 0; i < values.length; i++) {
+		values[0][3] = 0.0;
+		values[0][4] = 0.0;
+		values[1][0] = 0.0;
+		values[1][1] = 0.0;
+		values[1][2] = 0.0;
+		values[1][3] = 0.0;
+		values[1][4] = 0.0;*/
+		for(int i = 2; i < values.length; i++) {
 			for(int j = 0; j < 5; j++) {
 				values[i][j] = Math.random();
 			}

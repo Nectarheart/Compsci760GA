@@ -44,6 +44,7 @@ public class Constants {
 	
 	public static final double EFFICACY = 0.9;
 	public static final int MAX_ILL_DAYS = 4;
+	public static final int INITIAL_INFECT = 12;
 	
 	//public static final double[] DEATH_PROB = {1, 1, 1, 1, 1};
 	//public static final double[] DEATH_PROB = {0, 0, 0, 0, 0};
@@ -53,8 +54,8 @@ public class Constants {
 	public static final int RECOVERED = 2;
 	public static final int DEAD = 3;
 	//Messing around
-	public static final double ADULT_TO_CHILD = 0.03*0;
+	public static final double ADULT_TO_CHILD = 0.03;
 	public static final double CHILD_TO_CHILD = 0.08;
-	public static final double ADULT_TO_ADULT = 0.04*0.1;
+	public static final double ADULT_TO_ADULT = 0.04;
 	
 }

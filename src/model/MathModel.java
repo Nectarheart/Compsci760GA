@@ -7,7 +7,7 @@ public class MathModel {
 	
 	private Person[] pop; 
 	private Community[] communities;
-	private double[] vaccineStrategy;
+	//private double[] vaccineStrategy;
 	private int[] infectedTotal;
 	private boolean runOnce = false;
 	
@@ -16,9 +16,9 @@ public class MathModel {
 	}
 	
 	public int[] run(double[] vaccineStrategy) {
-		this.vaccineStrategy = vaccineStrategy;
+		//this.vaccineStrategy = vaccineStrategy;
 		infectedTotal = new int[5];
-		initialise();
+		initialise(vaccineStrategy);
 		int infectedCounter = 0;
 		int deadCounter = 0;
 		int recoveredCounter = 0;
@@ -47,7 +47,7 @@ public class MathModel {
 		return infectedTotal;
 	}
 	
-	private void initialise() {
+	private void initialise(double[] vaccineStrategy) {
 		
 		if (!runOnce) {
 			runOnce = true;
@@ -85,7 +85,7 @@ public class MathModel {
 				ArrayList<MixingGroup> groups = new ArrayList<MixingGroup>();
 				groups.add(communities[randCommun]);
 				groups.add(communities[randCommun].getNeighbourhoods()[randNeighbour]);
-				if ((int)(2001*Math.random()) > 12) {
+				if ((int)(2001*Math.random()) >= Constants.INITIAL_INFECT) {
 					pop[i] = new Person(i, Constants.SUSCEPTIBLE, 0, false, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
 				} else {
 					pop[i] = new Person(i, Constants.INFECTED, 0, false, groups, communities[randCommun], communities[randCommun].getNeighbourhoods()[randNeighbour]);
@@ -274,14 +274,36 @@ public class MathModel {
 				}	
 			}
 		} else {
+			int age;
+			boolean toVacc;
+			shuffleArray(pop);
+			int[] counters = new int[5];
 			for (int i = 0; i < Constants.POP_SIZE; i++) {
-				if ((int)(2001*Math.random()) > 12) {
+				pop[i].reset();
+				if ((int)(2001*Math.random()) >= Constants.INITIAL_INFECT) {
 					pop[i].setStatus(Constants.SUSCEPTIBLE);
 				} else {
 					pop[i].setStatus(Constants.INFECTED);
 					infectedTotal[pop[i].getAge()]++;
 				}
-				pop[i].reset();
+				age = pop[i].getAge();
+				toVacc = false;
+				if (age == 0 && counters[age] <= 680*vaccineStrategy[age]) {
+					toVacc = true;
+				} else if (age == 1 && counters[age] <= 2040*vaccineStrategy[age]) {
+					toVacc = true;
+					counters[age]++;
+				} else if (age == 2 && counters[age] <= 4624*vaccineStrategy[age]) {
+					toVacc = true;
+					counters[age]++;
+				} else if (age == 3 && counters[age] <= 1409*vaccineStrategy[age]) {
+					toVacc = true;
+					counters[age]++;
+				} else if (age == 4 && counters[age] <= 1247*vaccineStrategy[age]) {
+					toVacc = true;
+					counters[age]++;
+				}
+				pop[i].setVaccine(toVacc);
 			}
 		}
 	}
