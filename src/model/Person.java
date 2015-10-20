@@ -123,10 +123,10 @@ public class Person {
 				}
 			}
 			return Constants.SUSCEPTIBLE;
-		} else if (status == Constants.INFECTED && daysInfected < (Constants.MAX_ILL_DAYS - vaccineDay + age*2)) {
+		} else if (status == Constants.INFECTED && daysInfected < (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			daysInfected++;
 			return Constants.INFECTED;
-		} else if (status == Constants.INFECTED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay + age*2)) {
+		} else if (status == Constants.INFECTED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			double rand = Math.random();
 			if (Constants.DEATH_PROB[age] >= rand) {
 				return Constants.DEAD;
@@ -146,12 +146,12 @@ public class Person {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).incrementInfected(this);
 			}
-		} else if (status == Constants.RECOVERED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay + age*2)) {
+		} else if (status == Constants.RECOVERED && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).decrementInfected(this);
 			}
 			daysInfected++;
-		} else if (status == Constants.DEAD && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay + age*2)) {
+		} else if (status == Constants.DEAD && daysInfected == (Constants.MAX_ILL_DAYS - vaccineDay)) {
 			for (int i = 0; i < groups.size(); i++) {
 				groups.get(i).decrementInfected(this);
 				//groups.get(i).removeMember(this);

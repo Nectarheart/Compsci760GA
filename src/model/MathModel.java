@@ -18,18 +18,18 @@ public class MathModel {
 	public int[] run(double[] vaccineStrategy) {
 		//this.vaccineStrategy = vaccineStrategy;
 		infectedTotal = new int[5];
+		int [] deadTotal = new int[5];
 		initialise(vaccineStrategy);
 		int infectedCounter = 0;
 		int deadCounter = 0;
 		int recoveredCounter = 0;
 		int[] temp = new int[Constants.POP_SIZE];
-		for (int j = 0; j < 140; j++) {
+		for (int j = 0; j < 80; j++) {
 			for(int i = 0; i < pop.length; i++) {
 				temp[i] = pop[i].infect();
 				if (temp[i] == Constants.INFECTED && pop[i].getStatus() == Constants.SUSCEPTIBLE) {
 					infectedCounter++;
-					infectedTotal[pop[i].getAge()]++;
-					
+					infectedTotal[pop[i].getAge()] += Constants.WEIGHTS[pop[i].getAge()];
 				} else if (temp[i] == Constants.RECOVERED && pop[i].getStatus() == Constants.INFECTED) {
 					recoveredCounter++;
 				}
@@ -37,6 +37,7 @@ public class MathModel {
 			for (int i = 0; i < pop.length; i++) {
 				if (temp[i] == Constants.DEAD && pop[i].getStatus() == Constants.INFECTED) {
 					deadCounter++;
+					deadTotal[pop[i].getAge()]++;
 				}
 				pop[i].update(temp[i]);
 			}

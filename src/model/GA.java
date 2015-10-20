@@ -7,35 +7,32 @@ public class GA {
 	private double[][] values = new double[Constants.GA_POP_SIZE][5];
 	private double[][] nextGen = new double[Constants.GA_POP_SIZE][5];
 	private int[] outcomes;
+	int total;
 	
 	public GA(int total) {
+		this.total = total;
 		int place = 0;
-		/*values[0][0] = 0.0;
-		values[0][1] = 0.0;
+		/*values[0][0] = 1.0;
+		values[0][1] = 1.0;
 		values[0][2] = 1.0;
 		values[0][3] = 0.0;
-		values[0][4] = 0.0;
-		values[1][0] = 0.0;
-		values[1][1] = 0.0;
-		values[1][2] = 0.0;
-		values[1][3] = 0.0;
-		values[1][4] = 0.0;*/
-		for(int i = 2; i < values.length; i++) {
+		values[0][4] = 0.0;*/
+		for(int i = 0; i < values.length; i++) {
 			for(int j = 0; j < 5; j++) {
 				values[i][j] = Math.random();
 			}
 			while (sum(values[i]) > total) {
 				place = (int)(5*Math.random());
-				if (values[i][place] > 0.01) {
-					values[i][place] -= 0.01;
+				if (values[i][place] > 0.001) {
+					values[i][place] -= 0.001;
 				} else if (2*Math.random() < 1) {
 					values[i][place] = 0;	
 				}
 			}
-			while (sum(values[i]) < total - 5) {
+			while (sum(values[i]) < total - 1) {
 				place = (int)(5*Math.random());
-				if (values[i][place] < 0.98) {
-					values[i][place] += 0.01;
+				if (values[i][place] < 0.999) {
+					values[i][place] += 0.001;
 				} else if (100*Math.random() < 1) {
 					values[i][place] = 1.0;	
 				}
@@ -95,8 +92,30 @@ public class GA {
 		return result;
 	}
 	
-	public void mutation(double toMute) {
-		
+	public void repair(double[] toRepair) {
+		int rand = (int)(5*Math.random());
+		while (sum(toRepair) > total) {
+			if (toRepair[rand] < 0.001) {
+				toRepair[rand] = 0;
+				rand = (int)(5*Math.random());
+				continue;
+			}
+			toRepair[rand] -= 0.001;
+		}
+		while (sum(toRepair) < total - 5) {
+			if (toRepair[rand] > 1) {
+				toRepair[rand] = 1;
+				rand = (int)(5*Math.random());
+				continue;
+			}
+			toRepair[rand] += 0.001;
+		}
+	}
+	
+	public void mutation(double[] toMute) {
+		int rand = (int)(5*Math.random());
+		toMute[rand] = Math.random();
+		repair(toMute);
 	}
 	
 	public void getNextGeneration() {
@@ -111,6 +130,9 @@ public class GA {
 		}
 		for (int i = 0; i < Constants.GA_POP_SIZE - 1; i++) {
 			nextGen[i+1] = crossover(temp[(int)(25*Math.random())], temp[(int)(25*Math.random())]);
+			if (Math.random() < 0.2) {
+				mutation(nextGen[i+1]);
+			}
 		}
 		values = nextGen;
 	}

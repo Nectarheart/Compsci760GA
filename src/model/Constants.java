@@ -2,6 +2,8 @@ package model;
 
 public class Constants {
 	
+	public static final String FILENAME = "C:\\Users\\Thommy\\Documents\\COMPSCI760 Project\\Output.txt";
+	
 	//Small playgroup
 	public static final int PG = 0;
 	public static final double PG_PROB = 0.04;
@@ -27,12 +29,12 @@ public class Constants {
 	public static final int COM = 9;
 	public static final double COM_PROB = 0.00001;
 	//Work group
-	public static final double WRKGRP_PROB = 0.0105;
+	public static final double WRKGRP_PROB = 0.04;
 	public static final int WRKGRP = 10;
 	
 	public static final int POP_SIZE = 10000;
 	
-	public static final int GA_POP_SIZE = 50;
+	public static final int GA_POP_SIZE = 100;
 	
 	public static final int NUMBER_OF_PG = 4;
 	
@@ -49,6 +51,7 @@ public class Constants {
 	//public static final double[] DEATH_PROB = {1, 1, 1, 1, 1};
 	//public static final double[] DEATH_PROB = {0, 0, 0, 0, 0};
 	public static final double[] DEATH_PROB = {0.0000263, 0.000021, 0.0002942, 0.0002942, 0.01998};
+	public static final double[] WEIGHTS = {1, 1, 1, 1, 1};
 	public static final int SUSCEPTIBLE = 0;
 	public static final int INFECTED = 1;
 	public static final int RECOVERED = 2;
