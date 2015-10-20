@@ -15,15 +15,15 @@ public class MathModelApp {
 			GA ga = new GA(amountOfVacc);
 			for (int k=0; k < 10; k++) {	
 				for(int j = 0; j < Constants.GA_POP_SIZE; j++) {
-					//for (int m = 0; m < 5; m++) {
+					for (int m = 0; m < 5; m++) {
 						/*for (int o = 0; o < 5; o++) {
 							System.out.print(ga.getValues(j)[o] + " ");
 						}*/
 						total = model.run(ga.getValues(j));
 						for (int i = 0; i < 5; i++) {
-							totalInfectedArray[j] += total[i]/1;
+							totalInfectedArray[j] += total[i]/5;
 						}	
-					//}
+					}
 					//System.out.println("\n" + GA.findMin(totalInfectedArray)[0] + " " + GA.findMin(totalInfectedArray)[1]);
 					/*for (int e = 0; e < j+1; e++) {
 						System.out.print(totalInfectedArray[e] + " ");
