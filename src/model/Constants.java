@@ -2,7 +2,7 @@ package model;
 
 public class Constants {
 	
-	public static final String FILENAME = "C:\\Users\\Thommy\\Documents\\COMPSCI760 Project\\Output1.txt";
+	public static final String FILENAME = "C:\\Users\\Thommy\\Documents\\COMPSCI760 Project\\TheirGATest.txt";
 	
 	//Small playgroup
 	public static final int PG = 0;

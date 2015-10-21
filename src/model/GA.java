@@ -7,10 +7,12 @@ public class GA {
 	private double[][] values = new double[Constants.GA_POP_SIZE][5];
 	private double[][] nextGen = new double[Constants.GA_POP_SIZE][5];
 	private int[] outcomes;
-	int total;
+	private int total;
+	private int type;
 	
-	public GA(int total) {
+	public GA(int total, int type) {
 		this.total = total;
+		this.type = type;
 		int place = 0;
 		/*values[0][0] = 1.0;
 		values[0][1] = 1.0;
@@ -92,6 +94,30 @@ public class GA {
 		return result;
 	}
 	
+	public void theirRepair(double[] toRepair) {
+		int sum = 0;
+		double result1 = 0;
+		double result2 = 0;
+		double result3 = 0;
+		while(sum(toRepair) < total -5 || sum(toRepair) > total + 5) {
+			int rand = (int)(5*Math.random());
+			sum = sum(toRepair);
+			if (sum < total) {
+				result1 = total - sum;
+				result2 = (1-toRepair[rand])*Constants.AGE_GROUP_SIZE[rand];
+				result3 = (total - sum)/5;
+				toRepair[rand] += Math.min(Math.min(result1, result2), result3)/Constants.AGE_GROUP_SIZE[rand];
+			} else if (total < sum) {
+				result1 = sum - total;
+				result2 = toRepair[rand]*Constants.AGE_GROUP_SIZE[rand];
+				result3 = ((sum - total)/5);
+				toRepair[rand] -= Math.min(Math.min(result1, result2), result3)/Constants.AGE_GROUP_SIZE[rand];
+			}
+			//System.out.println(sum(toRepair));
+			//(new Scanner(System.in)).nextLine();
+		}
+	}
+	
 	public void repair(double[] toRepair) {
 		int rand = (int)(5*Math.random());
 		while (sum(toRepair) > total) {
@@ -112,6 +138,19 @@ public class GA {
 		}
 	}
 	
+	public double[] theirCrossover(double[] first, double[] second) {
+		double[] result =  new double[5];
+		for(int i = 0; i < result.length; i++) {
+			if (Math.random() <= 0.8) {
+				result[i] = first[i];
+			} else {
+				result[i] = second[i];
+			}
+		}
+		theirRepair(result);
+		return result;
+	}
+	
 	public void mutation(double[] toMute) {
 		int rand = (int)(5*Math.random());
 		toMute[rand] = Math.random();
@@ -129,9 +168,13 @@ public class GA {
 			temp[i] = tournament(alreadyChosen);
 		}
 		for (int i = 0; i < Constants.GA_POP_SIZE - 1; i++) {
-			nextGen[i+1] = crossover(temp[(int)(25*Math.random())], temp[(int)(25*Math.random())]);
-			if (Math.random() < 0.2) {
-				mutation(nextGen[i+1]);
+			if (type == 0) {
+				nextGen[i+1] = crossover(temp[(int)(25*Math.random())], temp[(int)(25*Math.random())]);
+					if (Math.random() < 0.2) {
+						mutation(nextGen[i+1]);
+					}
+			} else {
+				nextGen[i+1] = theirCrossover(temp[(int)(25*Math.random())], temp[(int)(25*Math.random())]);
 			}
 		}
 		values = nextGen;
